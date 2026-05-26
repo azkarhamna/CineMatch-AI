@@ -1,0 +1,60 @@
+{
+    "silabus": {
+        "akademik": [
+            {
+                "mata_kuliah": "Pemrograman Python Dasar",
+                "topik": [
+                    "Tipe data",
+                    "Percabangan",
+                    "Perulangan",
+                    "Fungsi"
+                ],
+                "semester": 1
+            },
+            {
+                "mata_kuliah": "Basis Data",
+                "topik": [
+                    "ERD",
+                    "Normalisasi",
+                    "SQL dasar",
+                    "Join"
+                ],
+                "semester": 2
+            }
+        ],
+        "fasilitas": [
+            {
+                "nama": "Lab Komputer",
+                "jam_operasional": "08:00-17:00",
+                "lokasi": "Gedung A Lantai 2"
+            },
+            {
+                "nama": "Perpustakaan",
+                "jam_operasional": "08:00-16:00",
+                "lokasi": "Gedung B Lantai 1"
+            }
+        ]
+    },
+    "menu_navigasi": [
+        {
+            "id": "home",
+            "label": "Beranda",
+            "halaman": "app.py"
+        },
+        {
+            "id": "akademik",
+            "label": "Informasi Akademik",
+            "halaman": "pages/akademik.py"
+        },
+        {
+            "id": "fasilitas",
+            "label": "Fasilitas Kampus",
+            "halaman": "pages/fasilitas.py"
+        },
+        {
+            "id": "chatbot",
+            "label": "Layanan Chatbot",
+            "halaman": "pages/chatbot.py"
+        }
+    ]
+}
