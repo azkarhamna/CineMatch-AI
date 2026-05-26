@@ -54,11 +54,23 @@ def set_page_style() -> None:
     st.markdown(
         """
         <style>
-            .stApp { background: linear-gradient(180deg, #09090c 0%, #08080a 100%); }
-            .block-container { padding: 1.5rem 2rem 2rem; }
-            .stButton>button { background-color: #e50914; color: white; }
-            .stButton>button:hover { background-color: #c3070f; }
-            .chat-box { background: rgba(255,255,255,0.04); border: 1px solid #2f2f2f; border-radius: 18px; padding: 18px; }
+            :root { color-scheme: dark; }
+            .stApp { background: #07070a; }
+            .block-container { padding: 2rem; max-width: 1000px; margin: 0 auto; }
+            .chat-header { font-size: 38px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+            .chat-sub { color: #cfcfcf; margin-bottom: 18px; }
+            .messages { display: block; padding: 12px 6px 90px; }
+            .msg-row { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 18px; }
+            .msg-bot { background: rgba(255,160,0,0.12); color: #fff; padding: 14px 16px; border-radius: 12px; border: 1px solid rgba(255,160,0,0.14); max-width: 78%; }
+            .msg-user { background: rgba(220,38,38,0.12); color: #fff; padding: 14px 16px; border-radius: 12px; border: 1px solid rgba(220,38,38,0.14); margin-left: auto; max-width: 78%; }
+            .avatar { width: 36px; height: 36px; border-radius: 10px; display: inline-block; text-align:center; line-height:36px; font-weight:700 }
+            .avatar-bot { background: #ffb84d; color: #1b1b1b }
+            .avatar-user { background: #ef4444; color: #fff }
+            .input-area { position: fixed; left: 0; right: 0; bottom: 18px; display: flex; justify-content: center; }
+            .input-box { width: 100%; max-width: 980px; padding: 12px; background: rgba(0,0,0,0.35); border-radius: 12px; border: 1px solid rgba(255,255,255,0.04); display:flex; gap:10px; align-items:center }
+            .text-input { flex:1; padding: 12px 14px; background: rgba(255,255,255,0.03); border-radius: 8px; color: #fff; border: none }
+            .send-btn { background: #ef4444; color: #fff; padding: 10px 14px; border-radius: 8px; border: none }
+            .example-prompts { margin-top: 28px; color: #ddd }
         </style>
         """,
         unsafe_allow_html=True,
@@ -119,34 +131,62 @@ def generate_response(prompt: str) -> str:
 
 set_page_style()
 st.set_page_config(page_title="CineBot | CineMatch AI", page_icon="🤖", layout="wide")
+st.set_page_config(page_title="CineBot | CineMatch AI", page_icon="🤖", layout="wide")
 
-st.title("CineBot")
-st.write("Ask CineBot for movie recommendations, mood-based picks, or genre suggestions.")
+st.markdown("<div class='chat-header'>CineBot</div>", unsafe_allow_html=True)
+st.markdown("<div class='chat-sub'>Ask CineBot for movie recommendations, mood-based picks, or genre suggestions.</div>", unsafe_allow_html=True)
 
 if "conversation" not in st.session_state:
-    st.session_state.conversation = []
+    st.session_state.conversation = [
+        {"role": "assistant", "text": "Hi — I'm CineBot. Tell me your mood or a genre and I'll recommend movies."}
+    ]
 
-with st.form("cinebot_form"):
-    user_prompt = st.text_input("Ask CineBot", "Recommend me sad sci-fi movies")
-    submitted = st.form_submit_button("Send")
+def render_message(msg: dict):
+    role = msg.get('role')
+    text = msg.get('text')
+    if role == 'assistant':
+        html = f"""
+        <div class='msg-row'>
+          <div class='avatar avatar-bot'>🤖</div>
+          <div class='msg-bot'>{text}</div>
+        </div>
+        """
+    else:
+        html = f"""
+        <div class='msg-row'>
+          <div style='flex:1'></div>
+          <div class='msg-user'>{text}</div>
+          <div class='avatar avatar-user'>🙂</div>
+        </div>
+        """
+    st.markdown(html, unsafe_allow_html=True)
 
-    if submitted and user_prompt:
-        st.session_state.conversation.append({"role": "user", "text": user_prompt})
-        ai_answer = generate_response(user_prompt)
-        st.session_state.conversation.append({"role": "assistant", "text": ai_answer})
 
-if st.session_state.conversation:
-    for message in st.session_state.conversation:
-        if message["role"] == "user":
-            st.markdown(f"**You:** {message['text']}")
-        else:
-            st.markdown(f"**CineBot:** {message['text']}")
-        st.divider()
+container = st.container()
+with container:
+    st.markdown("<div class='messages'>", unsafe_allow_html=True)
+    for m in st.session_state.conversation:
+        render_message(m)
+    st.markdown("</div>", unsafe_allow_html=True)
 
-st.markdown("---")
-st.subheader("Example prompts")
-st.write(
-    "- Recommend me sad sci-fi movies\n"
-    "- I want a mind-blowing thriller\n"
-    "- Suggest a feel-good action film for tonight"
+# Input area (not part of the main flow so visually at bottom)
+user_input = st.text_input("", key="cinebot_input", placeholder="Type your question here...")
+send = st.button("Send", key="cinebot_send")
+
+if send and user_input:
+    st.session_state.conversation.append({"role": "user", "text": user_input})
+    # regenerate the container to show latest
+    with container:
+        render_message({"role": "user", "text": user_input})
+    ai_answer = generate_response(user_input)
+    st.session_state.conversation.append({"role": "assistant", "text": ai_answer})
+    with container:
+        render_message({"role": "assistant", "text": ai_answer})
+
+st.markdown(
+    "<div class='input-area'><div class='input-box'><input class='text-input' id='cinetext' placeholder='Type your question here...'>"
+    "<button class='send-btn' onclick=\"document.querySelector('#root > div div textarea').value = document.getElementById('cinetext').value; document.querySelector('#root button[kind=primary]').click();\">Send</button></div></div>",
+    unsafe_allow_html=True,
 )
+
+st.markdown("<div class='example-prompts'><b>Example prompts:</b> Recommend me sad sci-fi movies · I want a mind-blowing thriller · Suggest a feel-good action film for tonight</div>", unsafe_allow_html=True)
