@@ -1,60 +1,60 @@
 {
-    "silabus": {
-        "akademik": [
+    "syllabus": {
+        "academic": [
             {
-                "mata_kuliah": "Pemrograman Python Dasar",
-                "topik": [
-                    "Tipe data",
-                    "Percabangan",
-                    "Perulangan",
-                    "Fungsi"
+                "course": "Intro to Python Programming",
+                "topics": [
+                    "Data types",
+                    "Conditionals",
+                    "Loops",
+                    "Functions"
                 ],
                 "semester": 1
             },
             {
-                "mata_kuliah": "Basis Data",
-                "topik": [
+                "course": "Databases",
+                "topics": [
                     "ERD",
-                    "Normalisasi",
-                    "SQL dasar",
-                    "Join"
+                    "Normalization",
+                    "Basic SQL",
+                    "Joins"
                 ],
                 "semester": 2
             }
         ],
-        "fasilitas": [
+        "facilities": [
             {
-                "nama": "Lab Komputer",
-                "jam_operasional": "08:00-17:00",
-                "lokasi": "Gedung A Lantai 2"
+                "name": "Computer Lab",
+                "hours": "08:00-17:00",
+                "location": "Building A, 2nd Floor"
             },
             {
-                "nama": "Perpustakaan",
-                "jam_operasional": "08:00-16:00",
-                "lokasi": "Gedung B Lantai 1"
+                "name": "Library",
+                "hours": "08:00-16:00",
+                "location": "Building B, 1st Floor"
             }
         ]
     },
-    "menu_navigasi": [
+    "navigation_menu": [
         {
             "id": "home",
-            "label": "Beranda",
-            "halaman": "app.py"
+            "label": "Home",
+            "page": "app.py"
         },
         {
-            "id": "akademik",
-            "label": "Informasi Akademik",
-            "halaman": "pages/akademik.py"
+            "id": "academic",
+            "label": "Academic Info",
+            "page": "pages/akademik.py"
         },
         {
-            "id": "fasilitas",
-            "label": "Fasilitas Kampus",
-            "halaman": "pages/fasilitas.py"
+            "id": "facilities",
+            "label": "Campus Facilities",
+            "page": "pages/fasilitas.py"
         },
         {
             "id": "chatbot",
-            "label": "Layanan Chatbot",
-            "halaman": "pages/chatbot.py"
+            "label": "Chatbot Service",
+            "page": "pages/chatbot.py"
         }
     ]
 }
