@@ -95,11 +95,23 @@ set_page_style()
 st.sidebar.title("CineMatch AI")
 st.sidebar.caption("Navigate to your next movie")
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+def resolve_page_file(filename: str) -> str:
+    paths = [
+        os.path.join(BASE_DIR, "pages", filename),
+        os.path.join(BASE_DIR, "Pages", filename),
+    ]
+    for path in paths:
+        if os.path.exists(path):
+            return path
+    return paths[0]
+
 pages = [
     st.Page(home_page, title="Home", default=True),
-    st.Page("pages/discover.py", title="Discover"),
-    st.Page("pages/cinebot.py", title="CineBot"),
-    st.Page("pages/theater.py", title="Trailer Theater"),
+    st.Page(resolve_page_file("discover.py"), title="Discover"),
+    st.Page(resolve_page_file("cinebot.py"), title="CineBot"),
+    st.Page(resolve_page_file("theater.py"), title="Trailer Theater"),
 ]
 
 page = st.navigation(pages)
